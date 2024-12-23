@@ -28,12 +28,12 @@ namespace WebApplication1.Controllers
                 user.IsAdmin = true;
                 _context.SaveChanges();
                 TempData["Message"] = "User promoted to admin!";
-                return RedirectToAction("AdminHomePage", "Account");
+                return RedirectToAction("AdminHomePage", "Admin");
             }
             else
             {
                 TempData["ErrorMessage"] = "User not found.";
-                return RedirectToAction("AdminHomePage", "Account");
+                return RedirectToAction("AdminHomePage", "Admin");
             }
         }
         [Authorize(Roles = "Admin")]
