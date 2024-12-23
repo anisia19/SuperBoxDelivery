@@ -39,7 +39,8 @@ namespace WebApplication1.Controllers
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                var authProperties = new AuthenticationProperties {
+                var authProperties = new AuthenticationProperties
+                {
                     IsPersistent = true, // Keeps the user logged in across sessions
                 };
 
