@@ -56,7 +56,6 @@ namespace WebApplication1.Controllers
             ModelState.AddModelError("", "Invalid username or password.");
             return View();
         }
-
         [HttpGet]
         public IActionResult SignUp()
         {
@@ -64,8 +63,13 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult SignUp(string username, string password, string email)
+        public IActionResult SignUp(string username, string password, string confirmPassword, string email)
         {
+            if (password != confirmPassword)
+            {
+                ModelState.AddModelError("ConfirmPassword", "Passwords do not match.");
+                return View();
+            }
             if (string.IsNullOrEmpty(password))
             {
                 ModelState.AddModelError("Password", "Password is required.");

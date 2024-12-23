@@ -13,7 +13,7 @@ namespace WebApplication1.Models
 
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
-        public string PasswordHash { get; private set; }
+        public string Password { get; private set; }
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
@@ -38,12 +38,12 @@ namespace WebApplication1.Models
                 throw new ArgumentNullException(nameof(password), "Password cannot be null or empty");
             }
             PasswordHasher<User> passwordHasher = new PasswordHasher<User>();
-            PasswordHash = passwordHasher.HashPassword(this, password);
+            Password = passwordHasher.HashPassword(this, password);
         }
         public bool VerifyPassword(string password)
         {
             var passwordHasher = new PasswordHasher<User>();
-            var result = passwordHasher.VerifyHashedPassword(this, PasswordHash, password);
+            var result = passwordHasher.VerifyHashedPassword(this, Password, password);
             return result == PasswordVerificationResult.Success;
         }
     }
