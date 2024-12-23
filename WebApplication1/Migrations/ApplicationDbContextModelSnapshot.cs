@@ -15,8 +15,10 @@ namespace WebApplication1.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
-            modelBuilder.Entity("WebApplication1.Models.SuperBox", b =>{
-                b.Property<string>("Id")
+
+            modelBuilder.Entity("WebApplication1.Models.SuperBox", b =>
+                {
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Capacity")

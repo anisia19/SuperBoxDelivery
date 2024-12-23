@@ -48,7 +48,7 @@ namespace WebApplication1.Controllers
 
                 if (user.IsAdmin)
                 {
-                    return RedirectToAction("AdminHomePage", "Account");
+                    return RedirectToAction("AdminHomePage", "Admin");
                 }
                 return RedirectToAction("UserHomePage", "Account");
             }

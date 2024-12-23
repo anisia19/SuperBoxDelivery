@@ -25,8 +25,6 @@ namespace WebApplication1.Migrations
                 {
                     table.PrimaryKey("PK_SuperBoxes", x => x.Id);
                 });
-
-
         }
 
         /// <inheritdoc />
