@@ -18,6 +18,7 @@ public class SuperBox
 
     [Required(ErrorMessage = "Zip Code is required.")]
     public int ZipCode { get; set; }
+    public string DisplayAddress => $"{StreetName} {StreetNumber}, {City}, {ZipCode}";
 
     public SuperBox()
     {

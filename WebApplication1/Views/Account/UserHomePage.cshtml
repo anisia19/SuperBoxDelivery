@@ -1,5 +1,9 @@
+@model WebApplication1.Models.Order;
 @{
     ViewData["Title"] = "User Home Page";
+}
+@{
+var superBoxes = ViewBag.SuperBoxes as List<WebApplication1.Models.SuperBox>;
 }
 
 @if (User.Identity.IsAuthenticated)
@@ -10,7 +14,45 @@ else
 {
     <p>Please <a asp-controller="Account" asp-action="LogIn">log in</a>.</p>
 }
-<button type="submit" class="btn btn-primary">Make Order</button>
+
+<div class="align-content-start">
+    <h2>Make a delivery order:</h2>
+</div>
+<form asp-action="UserHomePage" method="post">
+    <div class="form-group">
+        <label asp-for="User"></label>
+        <input asp-for="User.UserName" class="form-control" readonly />
+        <span asp-validation-for="User" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SuperBoxId">
+            Choose a Superbox:
+        </label>
+        <select asp-for="SuperBoxId" class="form-control" asp-items="@(new SelectList(Model.SuperBoxOptions, "Id", "DisplayAddress" ))">
+            <option value="">Select a SuperBox</option> <!-- Placeholder option -->
+        </select>
+        <span asp-validation-for="SuperBoxId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="RelevantInfo">
+            Important information about your delivery order:
+        </label>
+        <input asp-for="RelevantInfo" class="form-control" />
+        <span asp-validation-for="RelevantInfo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsUrgent">
+            Is your delivery order urgent?
+        </label>
+        <input asp-for="IsUrgent" type="checkbox" class="form-check-input" />
+        <span asp-validation-for="IsUrgent" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Order</button>
+</form>
 <p></p>
 <div>
     <form asp-controller="Account" asp-action="Logout" method="post">

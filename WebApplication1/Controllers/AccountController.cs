@@ -96,12 +96,18 @@ namespace WebApplication1.Controllers
             _context.SaveChanges();
             return RedirectToAction("LogIn", "Account");
         }
-
         [Authorize]
         public IActionResult UserHomePage()
         {
-            return View();
+            var superBoxes = _context.SuperBoxes.ToList();
+            var viewModel = new Order
+            {
+                SuperBoxOptions = superBoxes,
+                User = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name)
+            };
+            return View(viewModel);
         }
+
         [Authorize(Roles = "Admin")]
         public IActionResult AdminHomePage()
         {
