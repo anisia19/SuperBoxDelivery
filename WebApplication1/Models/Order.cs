@@ -1,27 +1,34 @@
-﻿namespace WebApplication1.Models;
-public enum OrderStatus
-{
-    InLocker,
-    Delivered
-}
-public class Order
-{
-    protected string IdOrder { get; set; }
-    protected User UserSender { get; set; }
-    protected User UserReceiver { get; set; }
-    protected bool IsUrgent { get; set; }
-    protected bool OrderStatus { get; set; }
-    protected Address AddressSender { get; set; }
-    protected Address AddressReceiver { get; set; }
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-    public Order(string idOrder, User userSender, User userReceiver, bool isUrgent, bool orderStatus, Address addressSender, Address addressReceiver)
+namespace WebApplication1.Models
+{
+    public enum OrderStatus
     {
-        IdOrder = idOrder;
-        UserSender = userSender;
-        UserReceiver = userReceiver;
-        IsUrgent = isUrgent;
-        OrderStatus = orderStatus;
-        AddressSender = addressSender;
-        AddressReceiver = addressReceiver;
+        InLocker,
+        Delivered
+    }
+
+    public class Order
+    {
+        [Key]
+        public int IdOrder { get; set; }
+        public User User { get; set; }
+        public string SuperBoxId { get; set; }
+
+        public SuperBox SuperBox{ get; set; }
+        public bool IsUrgent { get; set; }
+        public OrderStatus Status { get; set; } = OrderStatus.InLocker;
+        public string RelevantInfo { get; set; }
+        public Order() { }
+        public Order(User user,bool isUrgent, OrderStatus status, string relevantInfo, string superBoxId, SuperBox superBox)
+        {
+            User = user;
+            IsUrgent = isUrgent;
+            Status = status;
+            RelevantInfo = relevantInfo;
+            SuperBoxId = superBoxId;
+            SuperBox = superBox;
+        }
     }
 }
