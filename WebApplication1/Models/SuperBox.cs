@@ -8,9 +8,6 @@ public class SuperBox
     
     [ForeignKey("Order")]
     public int? OrderId { get; set; }
-    //public Order Order { get; set; }  // Navigation property to Order
-    
-    
     [Required(ErrorMessage = "Capacity is required.")]
     public int Capacity { get; set; }
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApplication1.Models;
+using System.Linq;
 
 namespace WebApplication1.Controllers
 {
@@ -141,6 +142,14 @@ namespace WebApplication1.Controllers
       {
           order.SuperBox = selectedSuperBox;
           order.SuperBoxId = selectedSuperBox.Id;
+          var ordersInLocker = _context.Orders
+              .Where(o => o.SuperBoxId == selectedSuperBox.Id && o.Status == OrderStatus.InLocker)
+              .Count();
+          if (ordersInLocker >= selectedSuperBox.Capacity)
+          {
+              _logger.LogWarning("SuperBox is full. User cannot place an order.");
+              ModelState.AddModelError("SuperBoxId", "This SuperBox is full! Please choose another one.");
+          }
       }
 
       if (ModelState.IsValid)
