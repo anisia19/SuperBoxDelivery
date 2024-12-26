@@ -4,8 +4,7 @@ namespace WebApplication1.Models;
 using System.ComponentModel.DataAnnotations;
 public class SuperBox
 {
-    public string Id { get; set; } 
-    
+    public string Id { get; set; }
     [ForeignKey("Order")]
     public int? OrderId { get; set; }
     [Required(ErrorMessage = "Capacity is required.")]
@@ -30,7 +29,6 @@ public class SuperBox
     }
     public SuperBox(Order order, int capacity, string streetName, int streetNumber, string city, int zipCode)
     {
-        
         Id = Guid.NewGuid().ToString();
         Capacity = capacity;
         StreetName = streetName;

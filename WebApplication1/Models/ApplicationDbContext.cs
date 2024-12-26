@@ -23,7 +23,6 @@ namespace WebApplication1.Models
             modelBuilder.Entity<SuperBox>()
                 .Property(sb => sb.StreetNumber)
                 .IsRequired();
-            
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.User)
                 .WithMany(u => u.Orders)  // Assuming a User has many Orders

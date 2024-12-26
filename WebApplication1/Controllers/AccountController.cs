@@ -24,7 +24,6 @@ namespace WebApplication1.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> LogIn(string username, string password)
         {
@@ -63,7 +62,6 @@ namespace WebApplication1.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public IActionResult SignUp(string username, string password, string confirmPassword, string email)
         {
@@ -116,72 +114,70 @@ namespace WebApplication1.Controllers
 
             return View(order);
         }
-  [HttpPost]
-  public IActionResult UserHomePage(Order order)
-  {
-      ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes.ToList(), "Id", "DisplayAddress");
-      var user = _context.Users.FirstOrDefault(u => User.Identity != null && u.UserName == User.Identity.Name);
-      if (user == null)
-      {
-          _logger.LogWarning("Logged-in user not found in the database.");
-          ModelState.AddModelError("User", "User is not logged in or does not exist.");
-      }
-      else
-      {
-          order.User = user;
-          order.UserId = user.Id;
-      }
+        [HttpPost]
+        public IActionResult UserHomePage(Order order)
+        {
+            ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes.ToList(), "Id", "DisplayAddress");
+            var user = _context.Users.FirstOrDefault(u => User.Identity != null && u.UserName == User.Identity.Name);
+            if (user == null)
+            {
+                _logger.LogWarning("Logged-in user not found in the database.");
+                ModelState.AddModelError("User", "User is not logged in or does not exist.");
+            }
+            else
+            {
+                order.User = user;
+                order.UserId = user.Id;
+            }
 
-      var selectedSuperBox = _context.SuperBoxes.FirstOrDefault(s => s.Id == order.SuperBoxId);
-      if (selectedSuperBox == null)
-      {
-          _logger.LogWarning("Invalid SuperBox selection.");
-          ModelState.AddModelError("SuperBoxId", "Please select a valid SuperBox.");
-      }
-      else
-      {
-          order.SuperBox = selectedSuperBox;
-          order.SuperBoxId = selectedSuperBox.Id;
-          var ordersInLocker = _context.Orders
-              .Where(o => o.SuperBoxId == selectedSuperBox.Id && o.Status == OrderStatus.InLocker)
-              .Count();
-          if (ordersInLocker >= selectedSuperBox.Capacity)
-          {
-              _logger.LogWarning("SuperBox is full. User cannot place an order.");
-              ModelState.AddModelError("SuperBoxId", "This SuperBox is full! Please choose another one.");
-          }
-      }
+            var selectedSuperBox = _context.SuperBoxes.FirstOrDefault(s => s.Id == order.SuperBoxId);
+            if (selectedSuperBox == null)
+            {
+                _logger.LogWarning("Invalid SuperBox selection.");
+                ModelState.AddModelError("SuperBoxId", "Please select a valid SuperBox.");
+            }
+            else
+            {
+                order.SuperBox = selectedSuperBox;
+                order.SuperBoxId = selectedSuperBox.Id;
+                var ordersInLocker = _context.Orders
+                    .Where(o => o.SuperBoxId == selectedSuperBox.Id && o.Status == OrderStatus.InLocker)
+                    .Count();
+                if (ordersInLocker >= selectedSuperBox.Capacity)
+                {
+                    _logger.LogWarning("SuperBox is full. User cannot place an order.");
+                    ModelState.AddModelError("SuperBoxId", "This SuperBox is full! Please choose another one.");
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Orders.Add(order);
+                    _context.SaveChanges();
 
-      if (ModelState.IsValid)
-      {
-          try
-          {
-              _context.Orders.Add(order);
-              _context.SaveChanges();
+                    _logger.LogInformation("Order saved successfully.");
+                    TempData["SuccessMessage"] = "Order placed successfully!";
+                    return RedirectToAction("UserHomePage");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error saving the order.");
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving your order. Please try again.");
+                }
+            }
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                _logger.LogWarning("ModelState Error: {ErrorMessage}", error.ErrorMessage);
+            }
 
-              _logger.LogInformation("Order saved successfully.");
-              TempData["SuccessMessage"] = "Order placed successfully!";
-              return RedirectToAction("UserHomePage");
-          }
-          catch (Exception ex)
-          {
-              _logger.LogError(ex, "Error saving the order.");
-              ModelState.AddModelError(string.Empty, "An error occurred while saving your order. Please try again.");
-          }
-      }
-      foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-      {
-          _logger.LogWarning("ModelState Error: {ErrorMessage}", error.ErrorMessage);
-      }
-
-      return View(order);
-  }
+            return View(order);
+        }
         [Authorize(Roles = "Admin")]
         public IActionResult AdminHomePage()
         {
             return View();
         }
-
         [Authorize]
         public IActionResult UserOrders()
         {
@@ -198,7 +194,6 @@ namespace WebApplication1.Controllers
 
             return View(userOrders);
         }
-
         [HttpPost]
         public async Task<IActionResult> Logout()
         {

@@ -7,7 +7,7 @@ namespace WebApplication1.Migrations
     /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
-       protected override void Up(MigrationBuilder migrationBuilder)
+        protected override void Up(MigrationBuilder migrationBuilder)
         {
             // Create the 'Users' table
             migrationBuilder.CreateTable(
