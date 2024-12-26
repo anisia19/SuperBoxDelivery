@@ -1,0 +1,32 @@
+@model List<WebApplication1.Models.Order>
+
+<h2>Your Delivery Orders</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>SuperBox</th>
+            <th>Status</th>
+            <th>Urgent Delivery</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@order.SuperBox.DisplayAddress</td>
+                <td>@order.Status</td>
+                <td>@(order.IsUrgent ? "Yes" : "No")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No orders found.</p>
+}

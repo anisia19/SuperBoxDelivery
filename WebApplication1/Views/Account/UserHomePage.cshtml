@@ -1,10 +1,12 @@
 @model WebApplication1.Models.Order
 
+
+
 @{
 ViewData["Title"] = "User Home Page";
 }
 
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity != null && User.Identity.IsAuthenticated)
 {
 <p>Welcome back, @User.Identity.Name!</p>
 }
@@ -27,7 +29,7 @@ else
    
     <div class="form-group">
         <label>User Name</label>
-        <input value="@User.Identity.Name" class="form-control" readonly />
+        <input value="@if (User.Identity != null) { @User.Identity.Name }" class="form-control" readonly />
     </div>
     
     <div class="form-group">
@@ -53,6 +55,9 @@ else
     <button type="submit" class="btn btn-primary">Submit Order</button>
 </form>
 <p></p>
+<button type="button" class="btn-secondary" onclick="window.location='@Url.Action("UserOrders", "Account")'">View My Orders</button>
+<p></p><p></p><p></p>
+
 <div>
     <form asp-controller="Account" asp-action="Logout" method="post">
         <button type="submit" class="btn btn-danger">Logout</button>

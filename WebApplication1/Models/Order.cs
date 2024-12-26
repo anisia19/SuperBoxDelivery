@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -28,8 +27,6 @@ namespace WebApplication1.Models
         public SuperBox? SuperBox { get; set; }
         [BindNever]
         public List<SuperBox>? SuperBoxOptions { get; set; } = new List<SuperBox>();
-
-
         public bool IsUrgent { get; set; }
         public OrderStatus Status { get; set; } = OrderStatus.InLocker;
         [Required]

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApplication1.Models;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication1.Controllers
 {
@@ -106,7 +106,7 @@ namespace WebApplication1.Controllers
             ViewBag.SuperBoxOptions = new SelectList(superBoxes, "Id", "DisplayAddress");
             if (TempData["SuccessMessage"] != null)
             {
-                ViewBag.SuccessMessage = TempData["SuccessMessage"].ToString();
+                ViewBag.SuccessMessage = TempData["SuccessMessage"]?.ToString();
             }
 
             var order = new Order
@@ -120,7 +120,7 @@ namespace WebApplication1.Controllers
   public IActionResult UserHomePage(Order order)
   {
       ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes.ToList(), "Id", "DisplayAddress");
-      var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+      var user = _context.Users.FirstOrDefault(u => User.Identity != null && u.UserName == User.Identity.Name);
       if (user == null)
       {
           _logger.LogWarning("Logged-in user not found in the database.");
@@ -182,6 +182,22 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        [Authorize]
+        public IActionResult UserOrders()
+        {
+            var user = _context.Users.FirstOrDefault(u => User.Identity != null && u.UserName == User.Identity.Name);
+            if (user == null)
+            {
+                _logger.LogWarning("User not found.");
+                return RedirectToAction("UserHomePage");
+            }
+            var userOrders = _context.Orders
+                .Where(o => o.UserId == user.Id)
+                .Include(o => o.SuperBox)
+                .ToList();
+
+            return View(userOrders);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
