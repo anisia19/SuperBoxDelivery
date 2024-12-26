@@ -19,9 +19,9 @@ namespace WebApplication1.Models
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; }
         public bool IsAdmin { get; set; }
-
+        public List<Order> Orders { get; set; }
+        
         public User() { }
-
         public User(string userName, string password, string mail)
         {
             UserName = userName;

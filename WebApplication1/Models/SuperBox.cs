@@ -1,9 +1,16 @@
-﻿namespace WebApplication1.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WebApplication1.Models;
 using System.ComponentModel.DataAnnotations;
 public class SuperBox
 {
-    public string Id { get; set; }
-
+    public string Id { get; set; } 
+    
+    [ForeignKey("Order")]
+    public int? OrderId { get; set; }
+    //public Order Order { get; set; }  // Navigation property to Order
+    
+    
     [Required(ErrorMessage = "Capacity is required.")]
     public int Capacity { get; set; }
 
@@ -24,8 +31,9 @@ public class SuperBox
     {
         Id = Guid.NewGuid().ToString();
     }
-    public SuperBox(int capacity, string streetName, int streetNumber, string city, int zipCode)
+    public SuperBox(Order order, int capacity, string streetName, int streetNumber, string city, int zipCode)
     {
+        
         Id = Guid.NewGuid().ToString();
         Capacity = capacity;
         StreetName = streetName;

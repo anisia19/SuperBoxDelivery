@@ -3,17 +3,19 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApplication1.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication1.Controllers
 {
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(ApplicationDbContext context)
+        public AccountController(ILogger<AccountController> logger, ApplicationDbContext context)
         {
+            _logger = logger;
             _context = context;
         }
 
@@ -100,14 +102,71 @@ namespace WebApplication1.Controllers
         public IActionResult UserHomePage()
         {
             var superBoxes = _context.SuperBoxes.ToList();
-            var viewModel = new Order
+            ViewBag.SuperBoxOptions = new SelectList(superBoxes, "Id", "DisplayAddress");
+            if (TempData["SuccessMessage"] != null)
             {
-                SuperBoxOptions = superBoxes,
-                User = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name)
-            };
-            return View(viewModel);
-        }
+                ViewBag.SuccessMessage = TempData["SuccessMessage"].ToString();
+            }
 
+            var order = new Order
+            {
+                SuperBoxId = ""
+            };
+
+            return View(order);
+        }
+  [HttpPost]
+  public IActionResult UserHomePage(Order order)
+  {
+      ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes.ToList(), "Id", "DisplayAddress");
+      var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+      if (user == null)
+      {
+          _logger.LogWarning("Logged-in user not found in the database.");
+          ModelState.AddModelError("User", "User is not logged in or does not exist.");
+      }
+      else
+      {
+          order.User = user;
+          order.UserId = user.Id;
+      }
+
+      var selectedSuperBox = _context.SuperBoxes.FirstOrDefault(s => s.Id == order.SuperBoxId);
+      if (selectedSuperBox == null)
+      {
+          _logger.LogWarning("Invalid SuperBox selection.");
+          ModelState.AddModelError("SuperBoxId", "Please select a valid SuperBox.");
+      }
+      else
+      {
+          order.SuperBox = selectedSuperBox;
+          order.SuperBoxId = selectedSuperBox.Id;
+      }
+
+      if (ModelState.IsValid)
+      {
+          try
+          {
+              _context.Orders.Add(order);
+              _context.SaveChanges();
+
+              _logger.LogInformation("Order saved successfully.");
+              TempData["SuccessMessage"] = "Order placed successfully!";
+              return RedirectToAction("UserHomePage");
+          }
+          catch (Exception ex)
+          {
+              _logger.LogError(ex, "Error saving the order.");
+              ModelState.AddModelError(string.Empty, "An error occurred while saving your order. Please try again.");
+          }
+      }
+      foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+      {
+          _logger.LogWarning("ModelState Error: {ErrorMessage}", error.ErrorMessage);
+      }
+
+      return View(order);
+  }
         [Authorize(Roles = "Admin")]
         public IActionResult AdminHomePage()
         {

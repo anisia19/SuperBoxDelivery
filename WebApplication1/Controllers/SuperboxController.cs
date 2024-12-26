@@ -31,11 +31,16 @@ namespace WebApplication1.Controllers
                 TempData["ErrorMessage"] = "Eroare la validarea formularului. Te rugăm să corectezi câmpurile.";
                 return View("~/Views/Admin/CreateSuperBox.cshtml", superBox);
             }
+            /* Ensure that Order is null if not specified
+            if (superBox.Order == null)
+            {
+                superBox.OrderId = null;  // Explicitly set Order to null
+            }*/
             var existingSuperBox = _context.SuperBoxes
                 .FirstOrDefault(sb => sb.StreetName == superBox.StreetName
                                       && sb.StreetNumber == superBox.StreetNumber
                                       && sb.ZipCode == superBox.ZipCode
-                                      && sb.City == superBox.City);
+                                   && sb.City == superBox.City);
 
             if (existingSuperBox != null)
             {
@@ -48,12 +53,12 @@ namespace WebApplication1.Controllers
                 superBox.Id = Guid.NewGuid().ToString();
                 _context.SuperBoxes.Add(superBox);
                 _context.SaveChanges();
-                TempData["SuccessMessage"] = "SuperBox-ul a fost creat cu succes!";
+                TempData["SuccessMessage"] = "Superbox created successfully!";
                 return RedirectToAction("ViewSuperBox");
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "A apărut o eroare la salvare: " + ex.Message;
+                TempData["ErrorMessage"] = "There was an error while saving: " + ex.Message;
                 return View("~/Views/Admin/CreateSuperBox.cshtml", superBox);
             }
         }
