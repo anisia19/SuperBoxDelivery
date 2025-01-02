@@ -1,16 +1,32 @@
 ﻿@model SuperBoxOrdersViewModel
-
+@section Scripts {
+<script src="~/js/SuperBoxView.js"></script>
+}
 <h2>Orders for SuperBox: @Model.SuperBox.DisplayAddress</h2>
+@if (TempData["SuccessMessage"] != null)
+{
+<div class="alert alert-success">
+    @TempData["SuccessMessage"]
+</div>
+}
 
-<h3>Orders in this SuperBox:</h3>
-
+@if (TempData["ErrorMessage"] != null)
+{
+<div class="alert alert-danger">
+    @TempData["ErrorMessage"]
+</div>
+}
 @if (Model.Orders != null && Model.Orders.Any())
 {
+<form method="post" action="@Url.Action("ChangeMultipleOrderStatuses", "SuperBox")">
+    <input type="hidden" name="superBoxId" value="@Model.SuperBox.Id" />
     <table class="table">
         <thead>
         <tr>
+            <th>
+                <input type="checkbox" id="selectAll" />
+            </th>
             <th>Order ID</th>
-            <th>User</th>
             <th>Status</th>
             <th>Relevant Info</th>
         </tr>
@@ -18,17 +34,33 @@
         <tbody>
         @foreach (var order in Model.Orders)
         {
-            <tr>
-                <td>@order.OrderId</td>
-                <td>@order.User?.UserName</td>
-                <td>@order.Status</td>
-                <td>@order.RelevantInfo</td>
-            </tr>
+        <tr>
+            <td>
+                @if (order.Status == WebApplication1.Models.OrderStatus.InLocker)
+                {
+                <input type="checkbox" name="selectedOrderIds" value="@order.OrderId" class="orderCheckbox" />
+                }
+            </td>
+            <td>@order.OrderId</td>
+            <td>
+                @if (order.Status == WebApplication1.Models.OrderStatus.InLocker)
+                {
+                <span class="text-warning">In Locker</span>
+                }
+                else
+                {
+                <span class="text-success">Delivered</span>
+                }
+            </td>
+            <td>@order.RelevantInfo</td>
+        </tr>
         }
         </tbody>
     </table>
+    <button type="submit" class="btn btn-success">Deliver Selected Orders</button>
+</form>
 }
 else
 {
-    <p>No orders found for this SuperBox.</p>
+<p>No orders found for this SuperBox.</p>
 }
