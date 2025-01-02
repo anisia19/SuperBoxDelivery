@@ -7,7 +7,8 @@ namespace WebApplication1.Models
     public enum OrderStatus
     {
         InLocker,
-        Delivered
+        Delivered,
+        Canceled
     }
 
     public class Order

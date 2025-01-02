@@ -194,6 +194,32 @@ namespace WebApplication1.Controllers
 
             return View(userOrders);
         }
+
+        [HttpPost]
+        public IActionResult CancelOrder(int[] selectedOrderIds)
+        {
+            if (selectedOrderIds != null && selectedOrderIds.Length > 0)
+            {
+                var ordersToUpdate = _context.Orders
+                    .Where(o => selectedOrderIds.Contains(o.OrderId) && o.Status == OrderStatus.InLocker)
+                    .ToList();
+
+                foreach (var order in ordersToUpdate)
+                {
+                    _logger.LogInformation("Updating order ID {OrderId} status to Canceled.", order.OrderId);
+                    order.Status = OrderStatus.Canceled;
+                }
+                _context.SaveChanges();
+
+                TempData["SuccessMessage"] = "Orders have been canceled successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "No orders were selected to cancel.";
+            }
+            return RedirectToAction("UserHomePage");
+        }
+
         [HttpPost]
         public async Task<IActionResult> Logout()
         {

@@ -47,9 +47,13 @@
                 {
                 <span class="text-warning">In Locker</span>
                 }
-                else
+                else if (order.Status == WebApplication1.Models.OrderStatus.Delivered)
                 {
                 <span class="text-success">Delivered</span>
+                }
+                else if (order.Status == WebApplication1.Models.OrderStatus.Canceled)
+                {
+                <span class="text-danger">Canceled</span>
                 }
             </td>
             <td>@order.RelevantInfo</td>

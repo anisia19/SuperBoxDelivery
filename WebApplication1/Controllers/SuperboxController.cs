@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication1.Controllers
 {
@@ -112,8 +113,16 @@ namespace WebApplication1.Controllers
 
                 foreach (var order in ordersToUpdate)
                 {
-                    _logger.LogInformation("Updating order ID {OrderId} status to Delivered.", order.OrderId);
-                    order.Status = OrderStatus.Delivered;
+                    if (order.Status == OrderStatus.InLocker)
+                    {
+                        _logger.LogInformation("Updating order ID {OrderId} status to Delivered.", order.OrderId);
+                        order.Status = OrderStatus.Delivered;
+                    }
+                    else if (order.Status == OrderStatus.Canceled)
+                    {
+                        _logger.LogInformation("Updating order ID {OrderId} status to Canceled (unchanged).",
+                            order.OrderId);
+                    }
                 }
 
                 _context.SaveChanges();

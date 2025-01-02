@@ -21,4 +21,12 @@
       <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Controllers\OrderController.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="wwwroot\js\OrdersViewUser" />
+    </ItemGroup>
+
 </Project>

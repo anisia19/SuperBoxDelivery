@@ -1,12 +1,28 @@
 @model List<WebApplication1.Models.Order>
+@section Scripts
+{<script src="~/js/OrdersViewUser.js"></script>}
+@if (TempData["SuccessMessage"] != null)
+{
+<div class="alert alert-success">
+    @TempData["SuccessMessage"]
+</div>
+}
 
+@if (TempData["ErrorMessage"] != null)
+{
+<div class="alert alert-danger">
+    @TempData["ErrorMessage"]
+</div>
+}
 <h2>Your Delivery Orders</h2>
 
 @if (Model != null && Model.Any())
 {
+    <form method="post" action="@Url.Action("CancelOrder", "Account")">
     <table class="table">
         <thead>
         <tr>
+            <th>Cancel Order</th>
             <th>Order ID</th>
             <th>SuperBox</th>
             <th>Status</th>
@@ -17,6 +33,12 @@
         @foreach (var order in Model)
         {
             <tr>
+                <td>
+                    @if (order.Status == WebApplication1.Models.OrderStatus.InLocker)
+                    {
+                        <input type="checkbox" name="selectedOrderIds" value="@order.OrderId" class="orderCheckbox" />
+                    }
+                </td>
                 <td>@order.OrderId</td>
                 <td>@order.SuperBox.DisplayAddress</td>
                 <td>@order.Status</td>
@@ -25,6 +47,10 @@
         }
         </tbody>
     </table>
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel these orders?');">
+            Cancel Orders
+        </button>
+    </form>
 }
 else
 {
