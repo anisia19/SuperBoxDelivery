@@ -25,11 +25,14 @@
             <td>
                 @if (order.Status == WebApplication1.Models.OrderStatus.InLocker)
                 {
-                <!-- Buton pentru a modifica statusul comenzii la "Delivered" -->
                 <form method="post" action="@Url.Action("ChangeOrderStatus", "Admin")">
                     <input type="hidden" name="orderId" value="@order.OrderId" />
                     <button type="submit" class="btn btn-success">Deliver</button>
                 </form>
+                }
+                else if (order.Status == WebApplication1.Models.OrderStatus.Canceled)
+                {
+                    <span class ="text-black">Canceled</span>
                 }
                 else
                 {

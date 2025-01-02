@@ -228,8 +228,10 @@ namespace WebApplication1.Controllers
         }
         public IActionResult ViewAllOrders()
         {
-            var orders = _context.Orders.ToList(); // Preluăm comenzile din baza de date
-            return View("ViewAllOrders", orders); // Indicăm explicit view-ul din folderul Account
+            var orders = _context.Orders
+                .OrderByDescending(o => o.OrderId)
+                .ToList();
+            return View("ViewAllOrders", orders);
         }
     }
 }

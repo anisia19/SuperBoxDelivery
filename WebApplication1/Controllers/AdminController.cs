@@ -56,6 +56,10 @@ namespace WebApplication1.Controllers
             {
                 return NotFound();
             }
+            if (order.Status == OrderStatus.Canceled)
+            {
+                return BadRequest("The order is already canceled and cannot be delivered.");
+            }
             if (order.Status != OrderStatus.Delivered)
             {
                 order.Status = OrderStatus.Delivered;
