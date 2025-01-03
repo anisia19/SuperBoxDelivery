@@ -1,12 +1,18 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<link rel="stylesheet" href="~/css/index.css" asp-append-version="true"/>
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="title">SuperBOX DELIVERY</h1>
+    <h2>Your packages, delivered with care by SuperBOX.</h2>
     <p>
-        <button type="button" onclick="location.href='@Url.Action("LogIn", "Account")'">Log in</button>
-        <button type="button" onclick="location.href='@Url.Action("SignUp", "Account")'">Sign up!</button>
+        <button class="custom-button login-button" type="button" onclick="location.href='@Url.Action("LogIn", "Account")'">Log in</button>
+        <button class="custom-button signup-button" type="button" onclick="location.href='@Url.Action("SignUp", "Account")'">Sign up!</button>
     </p>
-    
+
+</div>
+
+<div class="image-container">
+    <img src="~/images/bk2.jpeg" alt="Background Image">
 </div>
