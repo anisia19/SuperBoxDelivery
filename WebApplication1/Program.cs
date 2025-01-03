@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using Microsoft.Extensions.Hosting;
+using WebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHostedService<MyBackgroundService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
