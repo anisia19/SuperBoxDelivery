@@ -233,5 +233,83 @@ namespace WebApplication1.Controllers
                 .ToList();
             return View("ViewAllOrders", orders);
         }
+        
+        [HttpGet]
+        public IActionResult PlaceOrder()
+        {
+            ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes, "Id", "DisplayAddress");
+            return View("PlaceOrder");
+        }
+        
+        [HttpPost]
+        public IActionResult PlaceOrder(PlaceOrderModel model)
+        {
+            ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes, "Id", "DisplayAddress");
+            var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            if (user != null)
+            {
+                model.UserId = user.Id;
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var order = new Order
+                    {
+                        SuperBoxId = model.SuperBoxId,
+                        ReceiverUserId = model.ReceiverUserId,
+                        ReceiverSuperBoxId = model.ReceiverSuperBoxId,
+                        IsUrgent = model.IsUrgent,
+                        RelevantInfo = model.RelevantInfo,
+                        Status = OrderStatus.InLocker,
+                        UserId = model.UserId
+                    };
+                    _context.Orders.Add(order);
+                    _context.SaveChanges();
+
+                    _logger.LogInformation("Order placed successfully.");
+                    TempData["SuccessMessage"] = "Your order has been placed successfully!";
+                    return RedirectToAction("PlaceOrder");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error placing the order.");
+                    ModelState.AddModelError(string.Empty,
+                        "An error occurred while placing your order. Please try again.");
+                }
+            }
+
+            return View(model);
+        }
+        public IActionResult ReceivingOrdersFromUsers()
+        {
+            var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var orders = _context.Orders
+                .Where(o => o.ReceiverUserId == user.Id)
+                .OrderByDescending(o => o.OrderId)
+                .Join(_context.Users, 
+                    order => order.UserId, 
+                    u => u.Id, 
+                    (order, u) => new 
+                    {
+                        order.OrderId,
+                        order.SuperBoxId,
+                        order.ReceiverUserId,
+                        order.ReceiverSuperBoxId,
+                        order.IsUrgent,
+                        order.RelevantInfo,
+                        order.Status,
+                        UserName = u.UserName,
+                        SuperBoxAddress = order.SuperBox.DisplayAddress,
+                        ReceiverSuperBoxAddress = order.ReceiverSuperBox.DisplayAddress
+                    })
+                .ToList();
+            return View("ReceivingOrdersFromUsers", orders);
+        }
     }
 }

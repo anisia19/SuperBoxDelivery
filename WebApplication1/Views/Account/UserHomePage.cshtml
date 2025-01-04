@@ -1,7 +1,4 @@
 @model WebApplication1.Models.Order
-
-
-
 @{
 ViewData["Title"] = "User Home Page";
 }
@@ -55,8 +52,12 @@ else
     <button type="submit" class="btn btn-primary">Submit Order</button>
 </form>
 <p></p>
-<button type="button" class="btn-secondary" onclick="window.location='@Url.Action("UserOrders", "Account")'">View My Orders</button>
-<p></p><p></p><p></p>
+<div>
+    <button type="button" class="btn btn-success" onclick="window.location='@Url.Action("PlaceOrder", "Account")'">Place Order</button>
+    </div>
+<button type="button" class="btn-secondary" onclick="window.location='@Url.Action("UserOrders", "Account")'">View All Orders</button>
+
+<button type="button" class="btn-secondary" onclick="window.location='@Url.Action("ReceivingOrdersFromUsers", "Account")'">Receiving Orders From Users</button>
 <div>
     <form asp-controller="Account" asp-action="Logout" method="post">
         <button type="submit" class="btn btn-danger">Logout</button>

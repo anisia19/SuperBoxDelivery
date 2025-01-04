@@ -25,6 +25,12 @@ namespace WebApplication1.Migrations
                     b.Property<bool>("IsUrgent")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ReceiverSuperBoxId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ReceiverUserId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("RelevantInfo")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -40,6 +46,10 @@ namespace WebApplication1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("OrderId");
+
+                    b.HasIndex("ReceiverSuperBoxId");
+
+                    b.HasIndex("ReceiverUserId");
 
                     b.HasIndex("SuperBoxId");
 
@@ -75,8 +85,6 @@ namespace WebApplication1.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
-
                     b.ToTable("SuperBoxes");
                 });
 
@@ -108,6 +116,14 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.Models.Order", b =>
                 {
+                    b.HasOne("WebApplication1.Models.SuperBox", "ReceiverSuperBox")
+                        .WithMany()
+                        .HasForeignKey("ReceiverSuperBoxId");
+
+                    b.HasOne("WebApplication1.Models.User", "ReceiverUser")
+                        .WithMany()
+                        .HasForeignKey("ReceiverUserId");
+
                     b.HasOne("WebApplication1.Models.SuperBox", "SuperBox")
                         .WithMany()
                         .HasForeignKey("SuperBoxId")
@@ -118,21 +134,13 @@ namespace WebApplication1.Migrations
                         .WithMany("Orders")
                         .HasForeignKey("UserId");
 
+                    b.Navigation("ReceiverSuperBox");
+
+                    b.Navigation("ReceiverUser");
+
                     b.Navigation("SuperBox");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.SuperBox", b =>
-                {
-                    b.HasOne("WebApplication1.Models.Order", null)
-                        .WithMany("SuperBoxOptions")
-                        .HasForeignKey("OrderId");
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.Order", b =>
-                {
-                    b.Navigation("SuperBoxOptions");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.User", b =>

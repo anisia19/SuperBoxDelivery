@@ -18,5 +18,12 @@ html {
 }
 
 body {
-  margin-bottom: 3px;
+  margin-bottom: 3%;
+}
+
+button{
+  margin-top: 1%;
+}
+.form-group{
+  margin-bottom: 0.5rem;
 }
