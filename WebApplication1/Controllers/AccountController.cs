@@ -189,6 +189,7 @@ namespace WebApplication1.Controllers
             }
             var userOrders = _context.Orders
                 .Where(o => o.UserId == user.Id)
+                .OrderByDescending(o => o.OrderId)
                 .Include(o => o.SuperBox)
                 .ToList();
 
@@ -233,22 +234,37 @@ namespace WebApplication1.Controllers
                 .ToList();
             return View("ViewAllOrders", orders);
         }
-        
+
         [HttpGet]
         public IActionResult PlaceOrder()
         {
             ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes, "Id", "DisplayAddress");
             return View("PlaceOrder");
         }
-        
+
         [HttpPost]
         public IActionResult PlaceOrder(PlaceOrderModel model)
         {
             ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes, "Id", "DisplayAddress");
-            var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-            if (user != null)
+            var receiverUser = _context.Users.FirstOrDefault(u => u.UserName == model.ReceiverUserName);
+            var currentUser = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+
+            if (receiverUser == null)
             {
-                model.UserId = user.Id;
+                ModelState.AddModelError("ReceiverUserName", "The specified receiver username was not found.");
+            }
+            else if (currentUser != null && receiverUser.UserName == currentUser.UserName)
+            {
+                ModelState.AddModelError("ReceiverUserName", "You cannot send a package to yourself.");
+            }
+            else if (model.SuperBoxId == model.ReceiverSuperBoxId)
+            {
+                ModelState.AddModelError("ReceiverSuperBoxId", "The sender's SuperBox cannot be the same as the receiver's SuperBox.");
+            }
+            else if (currentUser != null)
+            {
+                model.ReceiverUserId = receiverUser.Id;
+                model.UserId = currentUser.Id;
             }
 
             if (ModelState.IsValid)
@@ -279,9 +295,10 @@ namespace WebApplication1.Controllers
                         "An error occurred while placing your order. Please try again.");
                 }
             }
-
             return View(model);
         }
+
+
         public IActionResult ReceivingOrdersFromUsers()
         {
             var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
@@ -292,10 +309,10 @@ namespace WebApplication1.Controllers
             var orders = _context.Orders
                 .Where(o => o.ReceiverUserId == user.Id)
                 .OrderByDescending(o => o.OrderId)
-                .Join(_context.Users, 
-                    order => order.UserId, 
-                    u => u.Id, 
-                    (order, u) => new 
+                .Join(_context.Users,
+                    order => order.UserId,
+                    u => u.Id,
+                    (order, u) => new
                     {
                         order.OrderId,
                         order.SuperBoxId,

@@ -1,0 +1,36 @@
+@model IEnumerable<dynamic>
+
+<h2>Your Orders</h2>
+
+@if (!Model.Any())
+{
+    <p>You have no orders at the moment.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Sender User Name</th>
+            <th>Sender SuperBox</th>
+            <th>Receiver SuperBox</th>
+            <th>Urgency</th>
+            <th>Relevant Info</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.UserName</td>
+                <td>@order.SuperBoxAddress</td>
+                <td>@order.ReceiverSuperBoxAddress</td>
+                <td>@(order.IsUrgent ? "Urgent" : "Normal")</td>
+                <td>@order.RelevantInfo</td>
+                <td>@order.Status</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
