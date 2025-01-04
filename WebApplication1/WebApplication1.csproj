@@ -23,15 +23,30 @@
 
     <ItemGroup>
       <Compile Remove="Controllers\OrderController.cs" />
+      <Compile Remove="Models\OrderViewModel.cs" />
+      <Compile Remove="Models\spm.cs" />
+      <Compile Remove="Attributes\RequiredIfPlaceOrderAttribute.cs" />
+      <Compile Remove="Attributes\**" />
+      <Content Include="wwwroot\css\User.css" />
+      <Compile Remove="Controllers\MakeDelivery.cs" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Remove="wwwroot\js\OrdersViewUser" />
       <Content Remove="wwwroot\css\LogIn.css" />
+      <Content Remove="Attributes\**" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="wwwroot\images\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Attributes\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Attributes\**" />
     </ItemGroup>
 
 </Project>

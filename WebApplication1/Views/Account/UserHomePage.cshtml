@@ -1,66 +1,43 @@
 @model WebApplication1.Models.Order
+<link rel="stylesheet" href="~/css/UserNice.css" asp-append-version="true"/>
 @{
 ViewData["Title"] = "User Home Page";
 }
-
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
-<p>Welcome back, @User.Identity.Name!</p>
+    <h1>Welcome back, @User.Identity.Name!</h1>
 }
 else
 {
 <p>Please <a asp-controller="Account" asp-action="LogIn">log in</a>.</p>
 }
-
 @if (TempData["SuccessMessage"] != null)
 {
 <div class="alert alert-success">
     @TempData["SuccessMessage"]
 </div>
 }
-<div class="align-content-start">
-    <h2>Make a delivery order:</h2>
+
+<div class="image-container">
+    <img src="~/images/bk7.png" alt="Background Image">
 </div>
 
-<form asp-action="UserHomePage" method="post">
-   
-    <div class="form-group">
-        <label>User Name</label>
-        <input value="@if (User.Identity != null) { @User.Identity.Name }" class="form-control" readonly />
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="SuperBoxId">Choose a SuperBox:</label>
-        <select asp-for="SuperBoxId" class="form-control" asp-items="ViewBag.SuperBoxOptions">
-            <option value="">Select a SuperBox</option>
-        </select>
-        <span asp-validation-for="SuperBoxId" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="RelevantInfo">Important information about your delivery order:</label>
-        <input asp-for="RelevantInfo" class="form-control" />
-        <span asp-validation-for="RelevantInfo" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="IsUrgent">Is your delivery order urgent?</label>
-        <input asp-for="IsUrgent" type="checkbox" class="form-check-input" />
-        <span asp-validation-for="IsUrgent" class="text-danger"></span>
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Submit Order</button>
-</form>
-<p></p>
-<div>
-    <button type="button" class="btn btn-success" onclick="window.location='@Url.Action("PlaceOrder", "Account")'">Place Order</button>
-    </div>
-<button type="button" class="btn-secondary" onclick="window.location='@Url.Action("UserOrders", "Account")'">View All Orders</button>
 
-<button type="button" class="btn-secondary" onclick="window.location='@Url.Action("ReceivingOrdersFromUsers", "Account")'">Receiving Orders From Users</button>
-<div>
-    <form asp-controller="Account" asp-action="Logout" method="post">
-        <button type="submit" class="btn btn-danger">Logout</button>
-    </form>
+<div class="button-group">
+    <div>
+        <button type="button" class="btn btn-success" onclick="window.location='@Url.Action("MakeOrder", "Account")'">Request Delivery Order</button>
+        <button type="button" class="btn btn-success" onclick="window.location='@Url.Action("PlaceOrder", "Account")'">Send Package to an User</button>
+    </div>
+    <div>
+        <button type="button" class="btn btn-secondary" onclick="window.location='@Url.Action("UserOrders", "Account")'">View All Orders</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location='@Url.Action("ReceivingOrdersFromUsers", "Account")'">View Incoming Packages</button>
+
+    </div>
+    <div>
+        <form asp-controller="Account" asp-action="Logout" method="post">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
 </div>
+
 

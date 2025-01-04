@@ -261,6 +261,7 @@ namespace WebApplication1.Controllers
             {
                 ModelState.AddModelError("ReceiverSuperBoxId", "The sender's SuperBox cannot be the same as the receiver's SuperBox.");
             }
+            //add verification for capaity
             else if (currentUser != null)
             {
                 model.ReceiverUserId = receiverUser.Id;
@@ -327,6 +328,12 @@ namespace WebApplication1.Controllers
                     })
                 .ToList();
             return View("ReceivingOrdersFromUsers", orders);
+        }
+        [HttpGet]
+        public IActionResult MakeOrder()
+        {
+            ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes, "Id", "DisplayAddress");
+            return View("MakeOrder");
         }
     }
 }

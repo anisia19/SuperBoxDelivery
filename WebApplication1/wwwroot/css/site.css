@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  margin-bottom: 3%;
+  margin-bottom: 2%;
 }
 
 button{
@@ -26,4 +26,10 @@ button{
 }
 .form-group{
   margin-bottom: 0.5rem;
+}
+h2{
+  margin-top: 3%;
+  font-size: xx-large;
+  font-family: "Be Vietnam Pro Black", sans-serif;
+  color: #0a53be;
 }
