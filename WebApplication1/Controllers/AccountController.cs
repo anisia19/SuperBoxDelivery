@@ -245,9 +245,12 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult PlaceOrder(PlaceOrderModel model)
         {
-            ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes, "Id", "DisplayAddress");
+            ViewBag.SuperBoxOptions = new SelectList(_context.SuperBoxes.ToList(), "Id", "DisplayAddress");
             var receiverUser = _context.Users.FirstOrDefault(u => u.UserName == model.ReceiverUserName);
             var currentUser = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+
+            var senderSuperBox = _context.SuperBoxes.FirstOrDefault(sb => sb.Id == model.SuperBoxId);
+            var receiverSuperBox = _context.SuperBoxes.FirstOrDefault(sb => sb.Id == model.ReceiverSuperBoxId);
 
             if (receiverUser == null)
             {
@@ -261,11 +264,40 @@ namespace WebApplication1.Controllers
             {
                 ModelState.AddModelError("ReceiverSuperBoxId", "The sender's SuperBox cannot be the same as the receiver's SuperBox.");
             }
-            //add verification for capaity
+            else if (senderSuperBox == null || receiverSuperBox == null)
+            {
+                ModelState.AddModelError(string.Empty, "One of the selected SuperBoxes was not found.");
+            }
             else if (currentUser != null)
             {
                 model.ReceiverUserId = receiverUser.Id;
                 model.UserId = currentUser.Id;
+            }
+
+            if (senderSuperBox != null)
+            {
+                var ordersInSenderSuperBox = _context.Orders
+                    .Where(o => o.SuperBoxId == senderSuperBox.Id && o.Status == OrderStatus.InLocker)
+                    .Count();
+
+                if (ordersInSenderSuperBox >= senderSuperBox.Capacity)
+                {
+                    _logger.LogWarning("Sender SuperBox is full. User cannot place an order.");
+                    ModelState.AddModelError("SuperBoxId", "The sender's SuperBox is full! Please choose another one.");
+                }
+            }
+
+            if (receiverSuperBox != null)
+            {
+                var ordersInReceiverSuperBox = _context.Orders
+                    .Where(o => o.SuperBoxId == receiverSuperBox.Id && o.Status == OrderStatus.InLocker)
+                    .Count();
+
+                if (ordersInReceiverSuperBox >= receiverSuperBox.Capacity)
+                {
+                    _logger.LogWarning("Receiver SuperBox is full. User cannot place an order.");
+                    ModelState.AddModelError("ReceiverSuperBoxId", "The receiver's SuperBox is full! Please choose another one.");
+                }
             }
 
             if (ModelState.IsValid)
@@ -282,6 +314,7 @@ namespace WebApplication1.Controllers
                         Status = OrderStatus.InLocker,
                         UserId = model.UserId
                     };
+
                     _context.Orders.Add(order);
                     _context.SaveChanges();
 
@@ -292,10 +325,10 @@ namespace WebApplication1.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error placing the order.");
-                    ModelState.AddModelError(string.Empty,
-                        "An error occurred while placing your order. Please try again.");
+                    ModelState.AddModelError(string.Empty, "An error occurred while placing your order. Please try again.");
                 }
             }
+
             return View(model);
         }
 
