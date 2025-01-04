@@ -1,0 +1,67 @@
+h1{
+    font-size: xxx-large;
+    font-family: "Be Vietnam Pro Black", sans-serif;
+    color: #0a53be;
+}
+.form-container{
+    display: block;
+    padding: 3%;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+}
+.form-group {
+    margin-bottom: 2%;
+}
+label {
+    font-size: 100%;
+    color: #434242;
+    margin-bottom: 1%;
+    font-weight: 600;
+}
+span.text-danger {
+    font-size: 13px;
+    color: #f44336;
+    margin-top: 5px;
+    display: block;
+}
+button[type="submit"] {
+    width: 10%;
+    padding: 16px;
+    font-size: 18px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+button[type="submit"]:active {
+    background-color: #388e3c;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.image-container img {
+    display: block;
+    width: 45%;
+    height: auto;
+    margin: 0;
+}
+

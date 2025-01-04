@@ -1,45 +1,46 @@
 ﻿@{
-    ViewData["Title"] = "Admin Home Page";
+ViewData["Title"] = "Admin Home Page";
 }
+<link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true"/>
 
-<h1>Admin Dashboard</h1>
+<h1 class="page-title">Admin Dashboard</h1>
 
-<form method="post" action="/Admin/AddAdmin">
-    <label for="usernameOrEmail">Enter username or email to promote to admin:</label>
-    <input type="text" id="usernameOrEmail" name="usernameOrEmail" required />
-    <button type="submit">Promote to Admin</button>
+<form method="post" action="/Admin/AddAdmin" class="form-container">
+    <label for="usernameOrEmail" class="form-label">Enter username or email to promote to admin:</label>
+    <input type="text" id="usernameOrEmail" name="usernameOrEmail" required class="form-input" />
+    <button type="submit" class="btn btn-primary">Promote to Admin</button>
 </form>
 
 @if (TempData["Message"] != null)
 {
-    <div class="alert alert-success">
-        @TempData["Message"]
-    </div>
+<div class="alert alert-success">
+    @TempData["Message"]
+</div>
 }
 
 @if (TempData["ErrorMessage"] != null)
 {
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
+<div class="alert alert-danger">
+    @TempData["ErrorMessage"]
+</div>
 }
-<a href="@Url.Action("Create", "SuperBox")" class="btn btn-primary mt-3">
-    Create New SuperBox
-</a>
 
-<a href="@Url.Action("ViewSuperBox", "SuperBox")" class="btn btn-primary mt-3">
-    View All SuperBoxes
-</a>
-<p></p>
+<div class="button-group">
+    <a href="@Url.Action("Create", "SuperBox")" class="btn btn-secondary">
+        Create New SuperBox
+    </a>
 
-<button type="button" class="btn-secondary" onclick="window.location='@Url.Action("ViewAllOrders", "Account")'">View All Orders</button>
-<p></p><p></p><p></p>
-<a href="@Url.Action("ChooseSuperBox", "SuperBox")" class="btn btn-info">Inspect a SuperBox</a>
-<p></p><p></p><p></p>
-<div>
+    <a href="@Url.Action("ViewSuperBox", "SuperBox")" class="btn btn-secondary">
+        View All SuperBoxes
+    </a>
+
+    <button type="button" class="btn btn-secondary" onclick="window.location='@Url.Action("ViewAllOrders", "Account")'">View All Orders</button>
+
+    <a href="@Url.Action("ChooseSuperBox", "SuperBox")" class="btn btn-secondary">
+        Inspect a SuperBox
+    </a>
+
     <form asp-controller="Account" asp-action="Logout" method="post">
         <button type="submit" class="btn btn-danger">Logout</button>
     </form>
 </div>
-<p></p><p></p><p></p>
-

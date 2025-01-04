@@ -27,6 +27,11 @@
 
     <ItemGroup>
       <Content Remove="wwwroot\js\OrdersViewUser" />
+      <Content Remove="wwwroot\css\LogIn.css" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\images\" />
     </ItemGroup>
 
 </Project>

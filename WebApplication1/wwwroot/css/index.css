@@ -1,0 +1,82 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.image-container img {
+    display: block;
+    width: 80%;
+    height: auto;
+    margin: 0;
+}
+
+h1{
+    font-size: xxx-large;
+    font-family: "Be Vietnam Pro Black", sans-serif;
+    color: #0a53be;
+}
+h2{
+    font-size: xx-large;
+    color: #ffa200;
+    font-family: "Be Vietnam Pro Black", sans-serif;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    align-content: center;
+}
+.custom-button {
+    background-color: #007BFF;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 0;
+}
+
+.custom-button:hover {
+    background-color: #0056b3;
+}
+
+.custom-button:active {
+    background-color: #004085;
+}
+
+.login-button {
+    background-color: #28a745;
+}
+
+.signup-button {
+    background-color: #ffc107;
+    color: black;
+}
+
+.signup-button:hover {
+    background-color: #e0a800;
+}
+
+.signup-button:active {
+    background-color: #c69500;
+}
+
+p {
+    text-align: center;
+}
+
+button {
+    margin: 10px;
+}
