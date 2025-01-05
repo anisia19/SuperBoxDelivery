@@ -12,9 +12,9 @@ namespace WebApplication1.Models
 
         [Required]
         public bool IsUrgent { get; set; }
+        [MaxLength(100, ErrorMessage = "The field cannot exceed 100 characters.")]
+        public string? RelevantInfo { get; set; }
 
-        [Required]
-        public string RelevantInfo { get; set; }
 
         // This will hold the username input to find the receiver's ID
         [Required]

@@ -33,8 +33,8 @@ namespace WebApplication1.Models
         public User? ReceiverUser { get; set; }
         public bool IsUrgent { get; set; }
         public OrderStatus Status { get; set; } = OrderStatus.InLocker;
-        [Required]
-        public string RelevantInfo { get; set; }
+        [MaxLength(100, ErrorMessage = "The field cannot exceed 100 characters.")]
+        public string? RelevantInfo { get; set; }
 
         public Order() { }
         public Order(User user, bool isUrgent, OrderStatus status, string relevantInfo, string superBoxId, string receiverSuperBoxId, int? receiverUserId)

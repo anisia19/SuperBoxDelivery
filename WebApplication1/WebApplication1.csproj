@@ -27,7 +27,6 @@
       <Compile Remove="Models\spm.cs" />
       <Compile Remove="Attributes\RequiredIfPlaceOrderAttribute.cs" />
       <Compile Remove="Attributes\**" />
-      <Content Include="wwwroot\css\User.css" />
       <Compile Remove="Controllers\MakeDelivery.cs" />
     </ItemGroup>
 
